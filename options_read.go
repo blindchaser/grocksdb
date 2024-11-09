@@ -369,3 +369,18 @@ func (opts *ReadOptions) SetIterStartTimestamp(ts []byte) {
 func (opts *ReadOptions) SetAutoReadaheadSize(enable bool) {
 	C.rocksdb_readoptions_set_auto_readahead_size(opts.c, boolToChar(enable))
 }
+
+// SetOptimizeMultiGetForIO enables optimization for MultiGet operations when using async IO.
+// This option needs to be used together with SetAsyncIO(true) to enable fully asynchronous MultiGet.
+// When both options are enabled and the system supports io_uring and coroutines, MultiGet operations
+// will be processed asynchronously for better performance.
+//
+// Default: false
+func (opts *ReadOptions) SetOptimizeMultiGetForIO(value bool) {
+	C.rocksdb_readoptions_set_optimize_multiget_for_io(opts.c, boolToChar(value))
+}
+
+// OptimizeMultiGetForIO returns if MultiGet IO optimization is enabled.
+func (opts *ReadOptions) OptimizeMultiGetForIO() bool {
+	return charToBool(C.rocksdb_readoptions_get_optimize_multiget_for_io(opts.c))
+}
